@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特产知识问答助手 - 智能问答</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> 
+    <style>
+:root {
+    --primary-color: #2e7d32;
+    --secondary-color: #4caf50;
+    --background-color: #f5f5f5;
+    --text-color: #333;
+    --border-radius: 8px;
+}
+
+        * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+       }
+       body {
+           display: flex;
+           flex-direction: column;
+           min-height: 150vh;
+           font-family: Arial, sans-serif;
+           line-height: 1.6;
+           background-color: #f9f9f9;
+           color: #333;
+       }
+
+       #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+.query-section {
+    width: 100%; 
+    height: 100%;
+    max-height: 1500px;
+    max-width: 1400px; 
+    margin: 20px auto; 
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1;
+}
+
+.carousel {
+    position: relative;
+    width: 100%; 
+    max-width: 1400px; 
+    max-height: 400px;
+    margin: 10px auto; 
+    background-color: #000;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+    z-index: 1;
+}
+
+.carousel-item {
+    width: 100%;
+    height: 400px;
+    position: relative;
+    opacity: 1;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.carousel-item.fade-out {
+    opacity: 0;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease-in-out;
+}
+
+.carousel-item.zoom-effect img {
+    transform: scale(1.0);
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0,0,0,0.7);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: var(--border-radius);
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+}
+
+.carousel-item.active .carousel-caption {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.carousel-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    transform: scale(1);
+}
+
+.dot:hover {
+    transform: scale(1.2);
+}
+
+.dot.active {
+    background-color: white;
+    transform: scale(1.2);
+}
+
+.chat-container {
+    width: 100%;
+    max-height: 1500px;
+    max-width: 1500px; 
+    margin: 1px auto; 
+    padding: 0 2px;
+    z-index: 1;
+}
+
+.chat-messages {
+    min-height: 580px;
+    max-height: 580px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #f9f9f9;
+}
+
+.message {
+    margin-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: messageAppear 0.3s ease forwards;
+}
+
+@keyframes messageAppear {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message-content {
+    max-width: 80%;
+    padding: 0.3rem 1rem;
+    border-radius: 1rem;
+    position: relative;
+}
+
+.user-message {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.user-message .message-content {
+    background-color: var(--primary-color);
+    color: white;
+    border-bottom-right-radius: 0.3rem;
+    margin-left: auto;
+}
+
+.bot-message .message-content {
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-bottom-left-radius: 0.3rem;
+}
+
+.sender {
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+    display: block;
+    color: #666;
+}
+
+.user-message .sender {
+    text-align: right;
+    color: #e0e0e0;
+}
+
+.time {
+    font-size: 0.7rem;
+    color: #999;
+    display: block;
+    margin-top: 0.3rem;
+}
+
+.user-message .time {
+    text-align: right;
+    color: #e0e0e0;
+}
+
+.input-container {
+    display: flex;
+    gap: 1rem;
+    background-color: white;
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: var(--border-radius);
+    padding-top: 20px;
+}
+
+#user-input {
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 2rem;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#user-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.1);
+}
+
+#send-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    padding: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+#send-button:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+#send-button:active {
+    transform: scale(0.95);
+}
+
+.send-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.info-section {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.info-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.info-section ul {
+    list-style-position: inside;
+    margin: 1rem 0;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.feature-card {
+    background-color: #f8f8f8;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+}
+
+.feature-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.control-display {
+    position: absolute;
+    right: 10px; 
+    bottom: 10px; 
+    padding: 8px 16px; 
+    font-size: 14px; 
+    color: #fff; 
+    background-color: #2e7d32; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
+}
+
+.control-display:hover {
+    background-color: #0056b3; /* 设置鼠标悬停在按钮上时的背景颜色 */
+}
+
+/* 侧边栏样式 */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;  /* 加宽侧边栏 */
+    height: 100vh;
+    background: linear-gradient(160deg, #e8f5e9 0%, #c8e6c9 100%); /* 渐变背景 */
+    color: #2e7d32; /* 主色文字 */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-250px);
+    z-index: 1000;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+    border-right: 1px solid #e0e0e0;
+}
+
+.sidebar.open {
+    transform: translateX(0);
+}
+
+/* 侧边栏切换按钮 */
+.sidebar .toggle-sidebar {
+    position: absolute;
+    top: 20px;
+    right: -40px;  /* 与侧边栏间距加大 */
+    background: #2e7d32;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.sidebar .toggle-sidebar:hover {
+    background: #1b5e20;
+    transform: rotate(90deg);
+}
+
+/* 侧边栏内容区域 */
+.sidebar .sidebar-content {
+    padding: 15px;
+}
+
+/* 按钮通用样式 */
+.sidebar .sidebar-content button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: rgba(46,125,50,0.08); /* 半透明主色背景 */
+    color: #2e7d32;
+    border: 1px solid rgba(46,125,50,0.15);
+}
+
+.sidebar .sidebar-content button i {
+    width: 20px;
+    font-size: 1.1rem;
+    color: #81c784;
+}
+
+.sidebar .sidebar-content button:hover {
+    background: rgba(46,125,50,0.15);
+    transform: translateX(8px);
+}
+
+/* 历史会话列表 */
+.history-list ul {
+    border-top: 1px solid rgba(46,125,50,0.1);
+    padding: 3;
+}
+
+.history-list li {
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 6px;
+    color: #363636;
+    background: rgba(46,125,50,0.05);
+    transition: all 0.2s ease;
+}
+
+.history-list li:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+.delete-icon {
+    color: #f99e9e;
+    padding: 4px;
+    border-radius: 4px;
+    margin-left: 40px;
+}
+
+.delete-icon:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.numbered-list {
+        line-height: 1.8;
+    }
+    .number {
+        font-weight: bold;
+        color: #2e7d32;
+        margin-right: 8px;
+    }
+   </style>
+   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script> <!-- 导入particles库 -->
+</head>
+<body>
+    <div id="particles-js"></div> <!-- 粒子背景 -->
+   
+    <div class="sidebar" id="sidebar">
+        <button class="toggle-sidebar" id="toggle-sidebar">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="sidebar-content">
+            <button id="new-session-button" class="new">
+                <i class="fas fa-plus-circle"></i>新建会话</button>
+            <button id="history-button" class="history">
+                <i class="fas fa-history"></i>历史会话</button>
+            <div id="history-list" class="history-list" style="display: none; margin-top: 10px;">
+                <h4 style="color: rgb(3, 3, 3); margin-bottom: 10px;">历史会话ID</h4>
+                <ul id="history-items" style="list-style: none; padding: 0;"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container" id="main">
+        <div class="carousel">
+            <div class="carousel-item active">
+                <img src="../images/1.jpg" alt="丰收果园">
+                <div class="carousel-caption">丰收果园</div>
+            </div>
+            <div class="carousel-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+
+        <section class="query-section">
+            <h2>特产智能助手</h2>
+            <div class="chat-container">
+                <div id="chat-messages" class="chat-messages"></div>
+                <div class="input-container">
+                    <input type="text" id="user-input" placeholder="请输入您的问题...">
+                    <button id="send-button">
+                        <svg viewBox="0 0 24 24" class="send-icon">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    // 聊天功能
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const navItems = document.querySelectorAll('.nav-item a');
+    var authToken = localStorage.getItem('access_token'); // 从本地获取Token
+    const sidebar = document.getElementById('sidebar');
+    const toggleSidebar = document.getElementById('toggle-sidebar');
+    const querySection = document.querySelector('.query-section');
+    const newSessionButton = document.getElementById('new-session-button');
+    const historyButton = document.getElementById('history-button');
+    const historyList = document.getElementById('history-list');
+    const historyItems = document.getElementById('history-items');
+    var username = localStorage.getItem('username');
+    const SESSION_HISTORY_KEY =`sessionHistory_${username}`;
+    const CHAT_RECORDS_KEY = `chatRecords_${username}`;
+
+    // 切换侧边栏状态
+    toggleSidebar.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        querySection.classList.toggle('open');
+
+        // 动态更新标题提示
+        if (sidebar.classList.contains('open')) {
+            toggleSidebar.title = "关闭侧边栏";
+        } else {
+            toggleSidebar.title = "打开侧边栏";
+        }
+    });
+
+    // 初始化标题提示
+    toggleSidebar.title = "打开侧边栏";
+
+// 初始化存储（如果不存在）
+if (!localStorage.getItem(SESSION_HISTORY_KEY)) {
+            localStorage.setItem(SESSION_HISTORY_KEY, JSON.stringify([]));
+        }
+        if (!localStorage.getItem(CHAT_RECORDS_KEY)) {
+            localStorage.setItem(CHAT_RECORDS_KEY, JSON.stringify({}));
+        }
+
+        // 获取存储数据
+        let sessionHistory = JSON.parse(localStorage.getItem(SESSION_HISTORY_KEY)) || [];
+        let chatRecords = JSON.parse(localStorage.getItem(CHAT_RECORDS_KEY)) || {};
+
+        createNewSession();
+
+    //聊天会话初始化
+    let sessionID = 0 ;
+    let isTemporarySession = true;
+    let pendingSession = null; // 新增临时会话存储
+    async function createNewSession() {
+            try {
+                const response = await fetch('http://10.29.118.247:8000/sessions/getnewsession', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + authToken,
+                        'accept': 'application/json',
+                    }
+                });
+                const data = await response.json();
+                sessionID = data.session;5
+
+                // 获取当前日期
+        const currentDate = new Date().toLocaleDateString();
+                
+                // 创建临时会话对象（不立即保存）
+            pendingSession = {
+                id: sessionID,
+                date: new Date().toLocaleDateString(),
+                temporary: true
+            };
+
+            // 初始化临时聊天记录
+            chatRecords[sessionID] = [];
+            chatMessages.innerHTML = '';
+            isTemporarySession = true; // 标记为临时会话
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // 保存聊天记录到当前会话
+        function saveMessage(sender, text) {
+            // 如果是临时会话的第一次消息
+        if (isTemporarySession && pendingSession) {
+            // 转换为正式会话
+            sessionHistory.unshift({
+                id: pendingSession.id,
+                date: pendingSession.date
+            });
+            // 更新存储
+            updateLocalStorage();
+            isTemporarySession = false;
+            pendingSession = null;
+            
+            // 刷新历史列表
+            loadHistorySessions();
+        }
+            const record = {
+                sender,
+                text,
+                time: new Date().toLocaleTimeString()
+            };
+            chatRecords[sessionID].push(record);
+            updateLocalStorage();
+        }
+
+        // 更新本地存储
+        function updateLocalStorage() {
+            localStorage.setItem(SESSION_HISTORY_KEY, JSON.stringify(sessionHistory));
+            localStorage.setItem(CHAT_RECORDS_KEY, JSON.stringify(chatRecords));
+        }
+
+        // 加载历史会话列表
+        function loadHistorySessions() {
+            const validSessions = sessionHistory.filter(session => !session.temporary);
+            historyItems.innerHTML = sessionHistory
+            .map(session => `
+            <li data-id="${session.id}">
+                <span>${session.id}</span>
+                <span style="margin-left: 10px; color: #999;">${session.date}</span>
+                <i class="fas fa-times delete-icon" title="删除会话"></i>
+            </li>
+        `).join('');
+            
+            // 添加点击事件
+            document.querySelectorAll('#history-items li').forEach(item => {
+                item.addEventListener('click', () => {
+                    const selectedId = item.dataset.id;
+                    sessionID = selectedId;
+                    
+                // 清空并加载历史消息
+                chatMessages.innerHTML = '';
+                if (!Array.isArray(chatRecords[selectedId])) {
+                chatRecords[selectedId] = []; // 初始化为空数组
+            }
+            chatRecords[selectedId].forEach(msg => {
+                appendMessage(msg.sender, msg.text, msg.time, true);
+            });
+        });
+
+        const deleteBtn = item.querySelector('.delete-icon');
+
+        deleteBtn.addEventListener('click',async (e) => {
+            e.stopPropagation(); // 阻止触发父级li的点击事件
+            const deleteId =  parseInt(item.dataset.id);
+
+            try {
+        // 调用 FastAPI 删除会话接口
+        const response = await fetch('http://10.29.118.247:8000/sessions/deletsession', {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': 'Bearer ' + authToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({session_id: deleteId })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json(); // 获取详细错误信息
+            throw new Error(errorData.detail || '删除失败');
+        }
+
+            // 从历史记录中删除
+            sessionHistory = sessionHistory.filter(session => session.id !== deleteId);
+            delete chatRecords[deleteId];
+            
+            // 如果删除的是当前会话
+            if(sessionID === deleteId) {
+                sessionID = sessionHistory[0]?.id || 0;
+                chatMessages.innerHTML = '';
+                if(sessionID) {
+                    if (!Array.isArray(chatRecords[sessionID])) {
+                        chatRecords[sessionID] = [];
+                    }
+                    chatRecords[sessionID].forEach(msg => {
+                        appendMessage(msg.sender, msg.text, msg.time, true);
+                    });
+                }
+            }
+            
+            updateLocalStorage();
+            loadHistorySessions(); // 重新加载列表
+        } catch (error) {
+            console.error("删除失败:", error);
+            alert(`删除失败：${error.message}`);
+        } 
+        });
+    });
+}
+
+const apiUrl = 'http://10.29.118.247:8000/sessions/getanswerspecialitystream?status_code=200';
+// 发送消息到服务器并获取回答
+async function sendMessage() {
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    // 添加用户消息到聊天界面
+    appendMessage('user', message);
+    userInput.value = '';
+
+    try {
+        const botMessage = createBotMessage();
+        let fullAnswer = ''; // 收集完整回答
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + authToken,
+                    'Content-Type': 'application/json',
+                    'Accept': 'text/event-stream',
+                },
+                body: JSON.stringify({ questions: message, session_id: sessionID })
+            });
+
+            // 流式读取器
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let partial = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                // 解码并处理数据块
+                const chunk = done ? decoder.decode() : decoder.decode(value, { stream: true });
+            // 更灵活的分割逻辑（兼容 \n 或 \n\n）
+            const lines = (partial + chunk).split(/\n\n|\n/);
+            partial = lines.pop() || '';
+
+                for (const line of lines) {
+                    const content = line.replace(/^data:\s*/, '').trim();
+                    if (content) {
+                        fullAnswer += content; 
+                        appendStreamingContent(botMessage, content);
+                    }
+                }
+                if (done) {
+                if (partial) {
+                    const content = partial.replace(/^data:\s*/, '').trim();
+                    if (content) {
+                        fullAnswer += content;
+                        appendStreamingContent(botMessage, content);
+                    }
+                }
+                break;
+            }
+            }
+            saveMessage('bot', fullAnswer);
+            addTimestamp(botMessage);
+        
+    } catch (error) {
+        appendMessage('bot', '抱歉，暂时无法处理您的请求。请稍后再试。');
+    }
+}
+
+// 创建初始bot消息元素
+function createBotMessage() {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message bot-message';
+    messageDiv.innerHTML = `
+        <div class="message-content">
+            <span class="sender">智能助手</span>
+            <div class="streaming-content"></div> <!-- 改为div容器 -->
+            <span class="time"></span>
+        </div>
+    `;
+    chatMessages.appendChild(messageDiv);
+    return messageDiv.querySelector('.streaming-content'); // 返回容器引用
+}
+
+// 流式内容追加
+function appendStreamingContent(element, content) {
+    // 分割为行处理
+    const lines = content.split('\n');
+    
+    lines.forEach(line => {
+        // 检测序号格式（如1., 2.等）
+        const match = line.match(/^(\d+\.)\s+(.*)/);
+        
+        if (match) {
+            // 创建带样式的序号
+            const numberedLine = document.createElement('div');
+            numberedLine.className = 'numbered-list';
+            
+            const numberSpan = document.createElement('span');
+            numberSpan.className = 'number';
+            numberSpan.textContent = match[1];
+            
+            const textSpan = document.createElement('span');
+            textSpan.textContent = match[2];
+            
+            numberedLine.appendChild(numberSpan);
+            numberedLine.appendChild(textSpan);
+            element.appendChild(numberedLine);
+        } else {
+            // 普通文本逐个字符添加
+            const textNode = document.createTextNode('');
+            element.appendChild(textNode);
+            
+            line.split('').forEach((char, index) => {
+                setTimeout(() => {
+                    textNode.textContent += char;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 20 * index);
+            });
+        }
+    });
+    
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+    // 添加完成时间
+    function addTimestamp(element) {
+        const timeElement = element.parentElement.querySelector('.time');
+        timeElement.textContent = new Date().toLocaleTimeString();
+    }
+
+
+// 在聊天中添加消息
+const appendMessage = (sender, text, customTime, isHistory = false) => {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}-message`;
+    messageDiv.innerHTML = `
+        <div class="message-content">
+            <span class="sender">${sender === 'user' ? '您' : '智能助手'}</span>
+            <p class="message-text">${text}</p>
+            <span class="time">${customTime || new Date().toLocaleTimeString()}</span>
+        </div>
+    `;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+     // 保存消息（排除控制按钮点击触发的加载）
+     if (!isHistory) saveMessage(sender, text);
+};
+
+// 添加事件监听器
+sendButton.addEventListener('click', sendMessage);
+userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+
+// 事件绑定
+newSessionButton.addEventListener('click', async () => {
+        await createNewSession();
+        loadHistorySessions();
+        sidebar.classList.remove('open');
+    });
+
+    historyButton.addEventListener('click', () => {
+        if (historyList.style.display === 'none') {
+            loadHistorySessions();
+            historyList.style.display = 'block';
+        } else {
+            historyList.style.display = 'none';
+        }
+    });
+
+    // 初始化时加载最新会话
+    if (sessionHistory.length > 0) {
+        sessionID = sessionHistory[0].id;
+        if (!chatRecords[sessionID]) {
+        chatRecords[sessionID] = []; // 初始化为空数组
+    }
+        chatRecords[sessionID].forEach(msg => {
+            appendMessage(msg.sender, msg.text, msg.time);
+        });
+    } else {
+        createNewSession(); // 首次使用创建新会话
+    }
+
+
+// 轮播图
+let currentSlide = 0;
+    let isTransitioning = false;
+    const slides = [
+        { image: '../images/1.jpg', caption: '丰收果园' },
+        { image: '../images/2.jpg', caption: '新鲜果蔬' },
+        { image: '../images/3.jpg', caption: '智慧农业' }
+    ];
+
+    function updateCarousel(nextSlide = null) {
+        if (isTransitioning) return;
+        isTransitioning = true;
+
+        const carouselItem = document.querySelector('.carousel-item');
+        const dots = document.querySelectorAll('.dot');
+        
+        
+        if (nextSlide === null) {
+            nextSlide = (currentSlide + 1) % slides.length;
+        }
+
+    
+        carouselItem.classList.add('fade-out');
+        carouselItem.classList.remove('zoom-effect');
+        
+        setTimeout(() => {
+            
+            carouselItem.querySelector('img').src = slides[nextSlide].image;
+            carouselItem.querySelector('.carousel-caption').textContent = slides[nextSlide].caption;
+            
+          
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === nextSlide);
+            });
+            
+          
+            carouselItem.classList.remove('fade-out');
+            carouselItem.classList.add('zoom-effect');
+            
+            currentSlide = nextSlide;
+           
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 800);
+        }, 800);
+    }
+    
+    
+    const firstCarouselItem = document.querySelector('.carousel-item');
+    firstCarouselItem.classList.add('active');
+    firstCarouselItem.classList.add('zoom-effect');
+
+    
+    let carouselInterval = setInterval(() => updateCarousel(), 3000);
+
+    
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          
+            clearInterval(carouselInterval);
+            updateCarousel(index);
+            carouselInterval = setInterval(() => updateCarousel(), 3000);
+        });
+    });
+
+   
+    const carousel = document.querySelector('.carousel');
+    carousel.addEventListener('mouseenter', () => {
+        clearInterval(carouselInterval);
+    });
+
+    carousel.addEventListener('mouseleave', () => {
+        carouselInterval = setInterval(() => updateCarousel(), 3000);
+    });
+});
+
+//绘制粒子动态背景
+particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 90,
+                    density: {
+                        enable: true,
+                        value_area: 700
+                    }
+                },
+                color: {
+                    value: '#03a9f4'
+                },
+                shape: {
+                    type: 'circle'
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false
+                },
+                size: {
+                    value: 3,
+                    random: true
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#03a9f4',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 6,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'repulse'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                }
+            }
+        });
+
+    </script>
+
+</body>
+</html>

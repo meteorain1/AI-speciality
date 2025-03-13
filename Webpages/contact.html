@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特产知识问答助手 - 联系我们</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet"> <!-- 引入字体 -->
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+ 
+/* 联系我们容器 */
+.contact-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1;
+}
+
+.contact-container h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.contact-container p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.contact-info {
+    margin-bottom: 30px;
+}
+
+.contact-info a {
+    color: #1abc9c;
+    font-weight: 500;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+/* 表单样式 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    border-color: #1abc9c;
+    outline: none;
+}
+
+textarea {
+    height: 150px;
+    resize: none;
+}
+
+/* 提交按钮 */
+.btn-submit {
+    background-color: #1abc9c;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #16a085;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contact-container {
+        padding: 15px;
+        margin: 20px;
+    }
+}
+    </style>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script> <!-- 导入particles库 -->
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <!-- 联系我们内容 -->
+    <div class="contact-container">
+        <h2>联系我们</h2>
+        <p>如果您对我们的特产知识问答助手有任何问题或建议，欢迎与我们联系！</p>
+
+        <div class="contact-info">
+            <h3>联系方式</h3>
+            <p><strong>电子邮件：</strong><a href="mailto:support@example.com">support@example.com</a></p>
+            <p><strong>联系电话：</strong>123-456-7890</p>
+        </div>
+
+        <h3>在线留言</h3>
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="name">姓名：</label>
+                <input type="text" id="name" name="name" required placeholder="请输入您的姓名" />
+            </div>
+            <div class="form-group">
+                <label for="email">电子邮件：</label>
+                <input type="email" id="email" name="email" required placeholder="请输入您的电子邮件" />
+            </div>
+            <div class="form-group">
+                <label for="message">留言内容：</label>
+                <textarea id="message" name="message" required placeholder="请输入您的留言"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">提交留言</button>
+        </form>
+    </div>
+
+    <script>
+        //绘制粒子动态背景
+particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: '#03a9f4'
+                },
+                shape: {
+                    type: 'circle'
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false
+                },
+                size: {
+                    value: 3,
+                    random: true
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#03a9f4',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 6,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'repulse'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                }
+            }
+        });
+        </script>
+</body>
+</html>
