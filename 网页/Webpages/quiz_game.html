@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农产品问答游戏</title>
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+
+        /* 问题和答案区域样式 */
+        .quiz-container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+        }
+        .question {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .answer {
+            margin: 15px 0;
+            padding: 10px 0;
+        }
+        .answer label {
+            display: block;
+            background-color: #ecf0f1;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .answer label:hover {
+            background-color: #3498db;
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* 顶部显示当前题目和得分 */
+        .status {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+
+        /* 答案反馈样式 */
+        .feedback {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        .correct {
+            color: #27ae60;
+        }
+        .incorrect {
+            color: #e74c3c;
+        }
+
+        /* 结果显示和排行榜 */
+        .result {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+        .result.success {
+            color: #2ecc71;
+        }
+        .result.failure {
+            color: #e74c3c;
+        }
+
+        /* 排行榜 */
+        .ranking {
+            margin-top: 40px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .ranking h2 {
+            text-align: center;
+            color: #34495e;
+        }
+        .ranking ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .ranking li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .ranking li:last-child {
+            border-bottom: none;
+        }
+
+        /* 返回菜单按钮 */
+        .back-btn {
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            width: 100%;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .back-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* 调整屏幕宽度时的响应式布局 */
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 20px;
+            }
+        }
+
+        .button-container {
+    text-align: center; /* 使按钮居中 */
+    margin: 20px 0; /* 添加上下间距 */
+}
+
+.back-button {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #34495e;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.back-button:hover {
+    background-color: #2c3e50;
+}
+    </style>
+</head>
+<body>
+
+    <h1>农产品问答游戏</h1>
+    
+    <div class="button-container">
+        <a href="game.html" class="back-button">返回</a>
+    </div>
+
+    <div class="quiz-container" id="quizContainer">
+        <div class="status">
+            <div>题目：<span id="currentQuestion">第1题</span></div>
+            <div>得分：<span id="currentScore">0</span></div>
+        </div>
+
+        <div class="question" id="question">问题加载中...</div>
+        
+        <div class="answer" id="answers"></div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <button class="btn" id="nextBtn" style="display: none;">下一个问题</button>
+    </div>
+    
+    <!-- 结果展示 -->
+    <div class="result" id="result" style="display: none;"></div>
+
+    <!-- 排行榜 -->
+    <div class="ranking" id="ranking" style="display: none;">
+        <h2>排行榜</h2>
+        <ul id="rankingList"></ul>
+    </div>
+
+    <!-- 返回菜单按钮 -->
+    <button class="back-btn" id="backBtn" style="display: none;" onclick="window.location.href='game.html'">返回菜单</button>
+
+    <script>
+        // 题库（50个问题）
+        const questionBank = [
+            { question: "四川的特产是什么？", options: ["苹果", "杨梅", "橙子", "苹果酒"], correct: "杨梅" },
+            { question: "新疆的特产是什么？", options: ["葡萄", "香蕉", "橙子", "苹果"], correct: "葡萄" },
+            { question: "云南的特产是什么？", options: ["咖啡", "大米", "葡萄", "茶叶"], correct: "咖啡" },
+            { question: "中国哪个地方的特产是龙井茶？", options: ["福建", "浙江", "山东", "江西"], correct: "浙江" },
+            { question: "山东的特产是什么？", options: ["大葱", "苹果", "柑橘", "桃子"], correct: "大葱" },
+            { question: "江西的特产是什么？", options: ["苹果", "柚子", "猕猴桃", "火龙果"], correct: "柚子" },
+            { question: "北京的特产是什么？", options: ["鸭脖", "烤鸭", "炸鸡", "炸酱面"], correct: "烤鸭" },
+            { question: "福建的特产是什么？", options: ["龙井茶", "闽南米粉", "大米", "柑橘"], correct: "闽南米粉" },
+            { question: "陕西的特产是什么？", options: ["西安小吃", "油炸糕", "油条", "刀削面"], correct: "西安小吃" },
+            { question: "湖南的特产是什么？", options: ["剁椒", "酸菜", "辣椒酱", "泡菜"], correct: "剁椒" },
+            { question: "海南的特产是什么？", options: ["椰子", "橙子", "苹果", "火龙果"], correct: "椰子" },
+            { question: "广东的特产是什么？", options: ["腊肠", "柚子", "大葱", "龙井茶"], correct: "腊肠" },
+            { question: "广西的特产是什么？", options: ["桂花茶", "龙井茶", "茉莉花茶", "橙子"], correct: "桂花茶" },
+            { question: "浙江的特产是什么？", options: ["龙井茶", "白茶", "大米", "杨梅"], correct: "龙井茶" },
+            { question: "重庆的特产是什么？", options: ["火锅", "酸菜", "辣椒酱", "剁椒"], correct: "火锅" },
+            { question: "上海的特产是什么？", options: ["小笼包", "煎饼", "包子", "蘑菇"], correct: "小笼包" },
+            { question: "河南的特产是什么？", options: ["豫菜", "豆腐", "面条", "大葱"], correct: "豫菜" },
+            { question: "山西的特产是什么？", options: ["山西醋", "桃子", "葡萄", "柿子"], correct: "山西醋" },
+            { question: "内蒙古的特产是什么？", options: ["牛肉干", "羊肉", "奶制品", "黄酒"], correct: "羊肉" },
+            { question: "安徽的特产是什么？", options: ["黄山毛峰", "龙井茶", "金银花", "金针菇"], correct: "黄山毛峰" },
+            { question: "青海的特产是什么？", options: ["青稞", "大米", "羊肉", "橙子"], correct: "青稞" }
+            // 继续添加剩余问题...
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const leaderboard = [];
+
+        // 随机打乱题库中的问题
+        function getRandomQuestions(num) {
+            let shuffled = [...questionBank];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled.slice(0, num);
+        }
+
+        const currentQuestions = getRandomQuestions(5); // 随机抽取5个问题
+
+        // 显示问题
+        function showQuestion() {
+            const questionData = currentQuestions[currentQuestionIndex];
+            document.getElementById("question").textContent = questionData.question;
+            document.getElementById("currentQuestion").textContent = `${currentQuestionIndex + 1} / 5`;
+
+            const answersDiv = document.getElementById("answers");
+            answersDiv.innerHTML = '';
+            questionData.options.forEach(option => {
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'answer';
+                input.value = option;
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(option));
+                answersDiv.appendChild(label);
+            });
+
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            document.getElementById('feedback').textContent = '';
+        }
+
+        // 处理下一题按钮点击事件
+        function nextQuestion() {
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+            if (!selectedOption) {
+                alert("请先选择一个答案！");
+                return;
+            }
+
+            const correctAnswer = currentQuestions[currentQuestionIndex].correct;
+            if (selectedOption.value === correctAnswer) {
+                score += 20;
+                document.getElementById('feedback').textContent = '答对了！';
+                document.getElementById('feedback').classList.add('correct');
+                document.getElementById('feedback').classList.remove('incorrect');
+            } else {
+                document.getElementById('feedback').textContent = '答错了！';
+                document.getElementById('feedback').classList.add('incorrect');
+                document.getElementById('feedback').classList.remove('correct');
+            }
+
+            document.getElementById("currentScore").textContent = score;
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                showQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        // 游戏结束，显示分数和排行榜
+        function endGame() {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('ranking').style.display = 'block';
+
+            document.getElementById('result').textContent = `游戏结束！您的得分是: ${score} 分`;
+
+            leaderboard.push({ name: "玩家", score: score });
+
+            leaderboard.sort((a, b) => b.score - a.score);
+
+            const rankingList = document.getElementById('rankingList');
+            rankingList.innerHTML = '';
+            leaderboard.slice(0, 5).forEach((entry, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${index + 1}. ${entry.name} ${entry.score}分`;
+                rankingList.appendChild(li);
+            });
+
+            document.getElementById('backBtn').style.display = 'inline-block';
+        }
+
+        // 初始化游戏
+        showQuestion();
+        document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+    </script>
+</body>
+</html>

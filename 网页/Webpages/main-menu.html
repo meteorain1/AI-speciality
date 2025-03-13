@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特产知识问答助手 - 首页</title>
+    <style>
+        /* 通用样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* 嵌入视频背景 */
+        .hero video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1; /* 确保视频在背景层 */
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* 半透明黑色遮罩，确保文字清晰 */
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #f1f1f1;
+        }
+
+        .hero .cta-button {
+            display: inline-block;
+            background-color: #ffffff;
+            color: #f39c12;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .hero .cta-button:hover {
+            background-color: #e67e22;
+            color: #fff;
+        }
+
+        /* Section */
+        .section {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+
+        .features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #f39c12;
+        }
+
+        .feature-card p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script> <!-- 导入particles库 -->
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <!-- 嵌入视频背景 -->
+        <video autoplay muted loop>
+            <source src="../videos/background2.mp4" type="video/mp4">
+            您的浏览器不支持视频播放。
+        </video>
+        
+        <div class="hero-content">
+            <h1>特产知识问答助手</h1>
+            <p>基于大模型与知识图谱的智能问答助手，提供高效、准确的农副特产信息查询服务。</p>
+            <a class="cta-button" id="logout">退出登录</a>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="section">
+        <h2>关于我们</h2>
+        <p>近年来，自然语言领域出现了一项令人瞩目的技术：大模型（LLM）。大模型通过超大规模文本数据训练，具有更强的推理能力和上下文学习能力。</p>
+        <p>为了应对大模型的挑战，学者们将知识图谱与大模型相结合。特产知识问答助手正是利用了这一技术，通过Neo4j图数据库与大语言模型的结合，帮助用户快速了解各地特产及其背景文化。</p>
+    </div>
+
+    <!-- Features Section -->
+    <div class="section">
+        <h2>我们的核心功能</h2>
+        <div class="features">
+            <div class="feature-card">
+                <img src="../images/14321736063799_.pic_hd.jpg" alt="特产查询图片（推荐展示各类特产图片集合）">
+                <h3>特产查询</h3>
+                <p>快速查询各地特产的信息，了解背景文化、营养价值等。</p>
+            </div>
+            <div class="feature-card">
+                <img src="../images/WeChat0279a796f5320829bb86566fbacee1c0.jpg" alt="智能推荐图片（推荐展示数据推荐流程的示意图）">
+                <h3>数据可视</h3>
+                <p>流畅绘制图数据库中您所查询的数据的知识图谱。</p>
+            </div>
+            <div class="feature-card">
+                <img src="../images/WeChat909f5927bdf34a742ea4d10cd2d73bc8.jpg" alt="在线问答图片（推荐展示智能对话和问答的图片）">
+                <h3>在线问答</h3>
+                <p>通过智能问答功能，快速解决特产相关的疑问。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // 添加退出登录功能
+    document.getElementById('logout').addEventListener('click', (e) => {
+        e.preventDefault();
+        // 清除本地存储的用户信息
+        localStorage.removeItem('username');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('token_type');
+        // 跳转到登录页面
+        window.top.location.href = '../Start.html';
+    });
+
+        //绘制粒子动态背景
+particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: '#03a9f4'
+                },
+                shape: {
+                    type: 'circle'
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false
+                },
+                size: {
+                    value: 3,
+                    random: true
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#03a9f4',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 6,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'repulse'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                }
+            }
+        });
+        </script>
+
+</body>
+</html>
